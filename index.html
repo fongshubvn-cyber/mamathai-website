@@ -247,8 +247,17 @@ input:focus,select:focus,textarea:focus{outline:none;border-bottom:2px solid var
 .field{margin-bottom:18px;position:relative}
 .err{color:var(--lacquer);font-size:.82rem;margin-top:4px;min-height:1em;font-weight:500}
 form .btn{width:100%;margin-top:8px}
-.done{display:none;margin-top:16px;background:rgba(255,255,255,.55);padding:14px 16px;font-size:.93rem;color:var(--ink)}
+.done{display:none;margin-top:20px;background:#fff;border-radius:14px;padding:18px;color:var(--ink);box-shadow:0 8px 20px -10px rgba(40,28,0,.35)}
 .done.show{display:block}
+.done .step{font-size:.92rem;font-weight:600;margin-bottom:10px}
+.done .step span{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--y);font-size:.75rem;margin-right:8px}
+.done textarea{width:100%;min-height:150px;resize:vertical;font:inherit;font-size:.95rem;line-height:1.55;padding:12px 14px;border:1px solid #E4DCC6;border-radius:10px;background:var(--silk);color:var(--ink)}
+.done .acts2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 4px}
+.done .acts2 .btn{width:100%;margin:0}
+.btn-copy{background:var(--y);color:var(--ink)}
+.btn-copy.ok{background:#2E7A4C;color:#fff}
+.done .hint{font-size:.85rem;color:var(--muted);margin-top:10px}
+@media (max-width:420px){.done .acts2{grid-template-columns:1fr}}
 @media (max-width:960px){.book{grid-template-columns:1fr;gap:48px}}
 @media (max-width:480px){.grid2{grid-template-columns:1fr}form{padding:28px 22px}}
 
@@ -499,7 +508,7 @@ footer.site li{list-style:none;margin-bottom:8px}
       <span class="th" lang="th">จองโต๊ะ</span>
       <h2>Giữ cho bạn một bàn</h2>
       <svg class="orn" aria-hidden="true"><use href="#lotus"/></svg>
-      <p class="lead">Điền thông tin, Mama soạn sẵn tin nhắn để bạn gửi qua Messenger của fanpage. Đặt tiệc hoặc nhóm đông, gọi trực tiếp sẽ nhanh hơn.</p>
+      <p class="lead">Điền thông tin, Mama soạn sẵn tin nhắn. Bạn chỉ cần sao chép và gửi qua Messenger của fanpage. Đặt tiệc hoặc nhóm đông, gọi trực tiếp sẽ nhanh hơn.</p>
       <div class="ways">
         <a class="way" href="tel:0705908888"><b>070 590 8888</b><span>Gọi đặt bàn</span></a>
         <a class="way" href="https://m.me/100060438833985" target="_blank" rel="noopener"><b>Messenger</b><span>Nhắn fanpage MamaThai để đặt bàn</span></a>
@@ -517,7 +526,7 @@ footer.site li{list-style:none;margin-bottom:8px}
       </div>
       <div class="field"><label for="f-guests">Số khách</label><select id="f-guests"></select></div>
       <div class="field"><label for="f-note">Ghi chú</label><textarea id="f-note" rows="2" placeholder="Sinh nhật, ghế trẻ em, ít cay…"></textarea></div>
-      <button class="btn btn-dark" type="submit">Gửi yêu cầu qua Messenger</button>
+      <button class="btn btn-dark" type="submit">Soạn tin đặt bàn</button>
       <div class="done" id="done" role="status"></div>
     </form>
   </div>
@@ -769,12 +778,26 @@ $id("bookForm").addEventListener("submit", async e=>{
   if(!ok) return;
   const [y,m,d]=date.split("-"), note=$id("f-note").value.trim();
   const msg=`Đặt bàn MamaThai – 150/8B Nguyễn Trãi\n• Tên: ${name}\n• SĐT: ${phone}\n• Thời gian: ${$id("f-time").value}, ${d}/${m}/${y}\n• Số khách: ${$id("f-guests").value}`+(note?`\n• Ghi chú: ${note}`:"");
-  const win = window.open("https://m.me/100060438833985","_blank","noopener");
-  let copied=false; try{ await navigator.clipboard.writeText(msg); copied=true; }catch(_){}
-  $id("done").innerHTML = copied
-    ? `Đã sao chép thông tin đặt bàn. Messenger của MamaThai đang mở, bạn dán vào khung chat và gửi là xong. Mama sẽ xác nhận qua số ${phone}.`
-    : `Messenger của MamaThai đang mở. Bạn gửi giúp nội dung này:<br><br>${msg.replace(/\n/g,"<br>")}`;
-  $id("done").classList.add("show");
+  const done=$id("done");
+  done.innerHTML = `
+    <p class="step">Tin nhắn đặt bàn của bạn</p>
+    <textarea id="bkMsg" readonly aria-label="Nội dung tin nhắn đặt bàn"></textarea>
+    <div class="acts2">
+      <button type="button" class="btn btn-copy" id="bkCopy">Sao chép tin nhắn</button>
+      <a class="btn btn-dark" id="bkOpen" href="https://m.me/100060438833985" target="_blank" rel="noopener">Mở Messenger để gửi</a>
+    </div>
+    <p class="hint"><b>Cách gửi:</b> bấm "Sao chép tin nhắn", bấm "Mở Messenger để gửi", rồi dán vào khung chat (nhấn giữ → Dán, hoặc Ctrl + V) và bấm gửi. Mama sẽ xác nhận qua số ${phone}.</p>`;
+  const ta=$id("bkMsg"); ta.value=msg;
+  done.classList.add("show");
+  ta.style.height="auto"; ta.style.height=(ta.scrollHeight+4)+"px";
+  done.scrollIntoView({behavior: RM?"auto":"smooth", block:"nearest"});
+  $id("bkCopy").onclick = async () => {
+    const btn=$id("bkCopy"); let ok=false;
+    try{ await navigator.clipboard.writeText(msg); ok=true; }catch(_){}
+    if(!ok){ try{ ta.focus(); ta.select(); ta.setSelectionRange(0, msg.length); ok=document.execCommand("copy"); }catch(_){} }
+    if(ok){ btn.textContent="Đã sao chép ✓"; btn.classList.add("ok"); setTimeout(()=>{ btn.textContent="Sao chép tin nhắn"; btn.classList.remove("ok"); },2500); }
+    else { ta.focus(); ta.select(); btn.textContent="Chữ đã được bôi đen, bấm giữ để sao chép"; }
+  };
 });
 </script>
 </body>
