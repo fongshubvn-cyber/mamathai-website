@@ -730,6 +730,15 @@ addEventListener("popstate",()=>{ if(mv.classList.contains("open")) closeMV(true
 document.addEventListener("keydown",e=>{ if(e.key==="Escape" && mv.classList.contains("open") && !lb.classList.contains("open")) closeMV(false); });
 document.querySelectorAll("[data-open-menu]").forEach(el=>el.addEventListener("click",e=>{ e.preventDefault(); openMV(el.dataset.openMenu||undefined); }));
 
+/* Link trực tiếp: mamathaikitchen.vn/menu  ->  ?xem=menu (tuỳ chọn &loai=trua|chieu) */
+(function(){
+  const q=new URLSearchParams(location.search);
+  if (q.get("xem")==="menu"){
+    const k=q.get("loai");
+    openMV(k==="trua"||k==="chieu" ? k : undefined);
+  }
+})();
+
 /* Không gian */
 const gal=$id("gallery"), GAL_ORDER=[0,1,2,3,8,5,6,7];
 gal.innerHTML = GAL_ORDER.map(i=>`<button data-i="${i}" aria-label="Xem ảnh không gian ${i+1}"><img src="${GALLERY[i]}" alt="Không gian MamaThai ${i+1}" loading="lazy"></button>`).join("");

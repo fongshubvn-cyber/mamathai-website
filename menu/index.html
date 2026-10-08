@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thực đơn MamaThai</title>
+<meta name="robots" content="noindex">
+<meta http-equiv="refresh" content="0; url=../?xem=menu">
+<script>
+  // Giữ tuỳ chọn ?loai=trua|chieu nếu có
+  var q = new URLSearchParams(location.search), loai = q.get("loai");
+  location.replace("../?xem=menu" + (loai ? "&loai=" + encodeURIComponent(loai) : ""));
+</script>
+<style>
+  html,body{margin:0;height:100%;background:#FCD42C;color:#1E1A12;font-family:system-ui,sans-serif}
+  body{display:grid;place-items:center;text-align:center}
+  a{color:#1E1A12;font-weight:600}
+</style>
+</head>
+<body>
+  <p>Đang mở thực đơn MamaThai…<br><a href="../?xem=menu">Bấm vào đây nếu trang không tự chuyển</a></p>
+</body>
+</html>
