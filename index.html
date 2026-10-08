@@ -154,11 +154,12 @@ header.nav::before{content:"";position:absolute;top:0;right:0;bottom:0;left:0;ba
 
 /* Món nên gọi – nền vàng */
 .dishes{display:grid;grid-template-columns:1fr 1fr;gap:0 72px;position:relative}
-.dish{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:4px 18px;padding:26px 0;border-bottom:1px solid rgba(94,70,0,.25)}
+.dish{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:2px 18px;padding:24px 0;border-bottom:1px solid rgba(94,70,0,.25)}
+.dish .grp{grid-column:1/-1;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--lacquer);font-weight:500;margin-bottom:4px}
 .dish h3{font-size:1.5rem;color:var(--ink)}
-.dish .th{font-size:1.05rem;text-align:right}
-.dish p{grid-column:1/-1;color:var(--brown);font-size:.97rem;max-width:46ch}
-.dish .spice{grid-column:1/-1;font-size:.8rem;color:var(--lacquer);letter-spacing:.06em;margin-top:4px;font-weight:500}
+.dish .price{font-family:var(--serif);font-size:1.25rem;color:var(--ink);white-space:nowrap}
+.dish .th{grid-column:1/-1;font-size:1.1rem;color:var(--brown);margin-top:2px}
+.dish .en{grid-column:1/-1;font-size:.9rem;color:var(--brown);opacity:.85}
 @media (max-width:860px){.dishes{grid-template-columns:1fr}}
 
 /* Thực đơn – dải nút ngay dưới slider */
@@ -440,8 +441,8 @@ footer.site li{list-style:none;margin-bottom:8px}
     <div class="head">
       <div>
         <span class="th" lang="th">อาหารแนะนำ</span>
-        <h2>Món nên gọi lần đầu</h2>
-        <p class="lead" style="margin-top:12px">Độ cay có thể dặn bếp chỉnh theo khẩu vị.</p>
+        <h2>Món đặc sắc</h2>
+        <p class="lead" style="margin-top:12px">Gợi ý từ thực đơn 2026 của quán.</p>
       </div>
       <a class="btn btn-ghost" href="#menu" data-open-menu>Toàn bộ thực đơn</a>
     </div>
@@ -623,14 +624,14 @@ const MENU = {
   chieu: Array.from({length:20},(_,i)=>A["chieu"+(i+1)])
 };
 const DISHES = [
-  {vi:"Gỏi đu đủ", th:"ส้มตำ", d:"Đu đủ xanh giã cùng chanh, ớt, đậu phộng. Giòn, chua và cay tỉnh người.", s:"Cay nhiều"},
-  {vi:"Soup Tomyum", th:"ต้มยำ", d:"Nước dùng sả, riềng, lá chanh; chua cay đúng kiểu Thái.", s:"Cay nhiều"},
-  {vi:"Pad Thái", th:"ผัดไทย", d:"Bánh phở xào me, trứng, giá, rắc đậu phộng rang.", s:"Không cay"},
-  {vi:"Mì Tomyum", th:"บะหมี่ต้มยำ", d:"Tô mì nóng, vị Tomyum đậm đà cho bữa trưa.", s:"Cay vừa"},
-  {vi:"Gỏi xoài", th:"ยำมะม่วง", d:"Xoài xanh sợi, hành tím, rau thơm, nước mắm chanh.", s:"Cay vừa"},
-  {vi:"Xiên nướng", th:"หมูปิ้ง", d:"Thịt ướp kiểu Thái, nướng thơm, chấm sốt cay.", s:"Cay nhẹ"},
-  {vi:"Cơm chiên Thái", th:"ข้าวผัด", d:"Cơm chiên tơi hạt, thơm mùi chảo, kèm chanh và ớt.", s:"Cay nhẹ"},
-  {vi:"Xôi xoài & Trà Thái", th:"ข้าวเหนียวมะม่วง", d:"Xôi nước cốt dừa, xoài chín, ly trà Thái mát lạnh.", s:"Món ngọt"}
+  {g:"Món gỏi",     vi:"Gỏi đu đủ tôm khô",      th:"ส้มตำกุ้งแห้ง",        en:"Papaya Salad",                              p:"65k"},
+  {g:"Nhâm nhi",    vi:"Xiên nướng Satay x3",     th:"สะเต๊ะ",               en:"Satay Skewers x3",                             p:"65k"},
+  {g:"Món khô",     vi:"Pad Thái đặc biệt",       th:"ผัดไทยพิเศษ",          en:"Thai Stir-Fried Noodles (Pad Thai)",                   p:"126k"},
+  {g:"Món nước",    vi:"Mỳ Khao soi (Bò / Tôm)",  th:"ข้าวซอย",              en:"Khao Soi Beef / Shrimp Noodles",            p:"98k"},
+  {g:"Signature",   vi:"Miến tôm càng MamaThai",  th:"กุ้งอบวุ้นเส้น",          en:"Thai Mama Glass Noodles with River Prawn",  p:"228k"},
+  {g:"Món lẩu",     vi:"Hot pot Tomyum",          th:"ต้มยำหม้อไฟ",           en:"Tom Yum Hot Pot",                           p:"268k"},
+  {g:"Tráng miệng", vi:"Xôi xoài",                th:"ข้าวเหนียวมะม่วง",      en:"Mango Sticky Rice with Coconut Milk",       p:"58k"},
+  {g:"Thức uống",   vi:"Trà sữa Thái đỏ",         th:"ชาไทย",                en:"Thai Milk Tea",                             p:"46k"}
 ];
 const GALLERY = Array.from({length:12},(_,i)=>A["g"+(i+1)]);
 const QUOTES = [
@@ -674,7 +675,7 @@ function auto(){ clearInterval(timer); if(!RM) timer=setInterval(()=>go(cur+1),6
 dotBtns.forEach((b,i)=>b.onclick=()=>{go(i);auto();}); auto();
 
 /* Món tiêu biểu */
-$id("board").innerHTML = DISHES.map(d => `<div class="dish"><h3>${d.vi}</h3><span class="th" lang="th">${d.th}</span><p>${d.d}</p><span class="spice">${d.s}</span></div>`).join("");
+$id("board").innerHTML = DISHES.map(d => `<div class="dish"><h3>${d.vi}</h3><span class="price">${d.p}</span><span class="th" lang="th">${d.th}</span><span class="en">${d.en}</span></div>`).join("");
 
 /* Lightbox */
 const lb=$id("lb"), lbImg=$id("lbImg"), lbCap=$id("lbCap");
