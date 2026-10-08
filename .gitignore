@@ -1,0 +1,10 @@
+deploy.bat
+mamathai-website.html
+_anh-goc/
+README.txt
+mamathai-assets.json
+mamathai-hero-hd.json
+mamathai-menu-hd.json
+*.tmp
+desktop.ini
+Thumbs.db
